@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nonioaey Payment - Frutiger Aero Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700;800&family=Mitr:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --glossy-white: rgba(255, 255, 255, 0.4);
+            --aero-blue: #00d2ff;
+            --aero-green: #3aed9c;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            /* Frutiger Aero Background: Blue-Green Gradient with Nature feel */
+            background: linear-gradient(135deg, #0072ff 0%, #00d2ff 30%, #3aed9c 70%, #0072ff 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #002d5e;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* เอฟเฟกต์ฟองอากาศลอยขึ้น */
+        .bubble {
+            position: fixed;
+            bottom: -50px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: rise 10s infinite ease-in;
+            z-index: 1;
+        }
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0.5; }
+            100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+        }
+
+        /* Glassmorphism แบบ Skeuomorphism (มีความหนาและเงาสะท้อน) */
+        .aero-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-top: 4px solid rgba(255, 255, 255, 0.8); /* แสงตกกระทบด้านบน */
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 
+                        inset 0 -5px 15px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .aero-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+        }
+
+        .glass-inner {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* ฟอนต์หัวข้อตัวหนาสะใจ */
+        h1, h2, h3 { 
+            font-family: 'Mitr', sans-serif; 
+            text-shadow: 0 2px 4px rgba(255,255,255,0.8);
+        }
+
+        /* ปุ่มคัดลอกแบบ Glossy Button */
+        .btn-copy {
+            background: linear-gradient(to bottom, #ffffff 0%, #e0e0e0 100%);
+            border: 2px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            color: #0072ff;
+            font-weight: 800;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-copy:hover {
+            background: linear-gradient(to bottom, #00d2ff 0%, #0072ff 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* เอฟเฟกต์ควันตอนกด (Smoke Particle) */
+        .smoke-particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: explode 0.6s ease-out forwards;
+        }
+        @keyframes explode {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        /* อีโมจิขยับๆ */
+        .emoji-float {
+            display: inline-block;
+            animation: swing 3s infinite ease-in-out;
+        }
+        @keyframes swing {
+            0%, 100% { transform: rotate(-10deg) translateY(0); }
+            50% { transform: rotate(10deg) translateY(-5px); }
+        }
+
+        .text-neon {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.8), 0 0 20px rgba(0, 210, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center py-10 px-4">
+    <div id="bubbles-container"></div>
+
+    <div id="toast" class="fixed top-5 z-50 bg-white/90 text-blue-600 px-8 py-3 rounded-full font-extrabold shadow-2xl opacity-0 transition-all pointer-events-none border-2 border-blue-400">
+        🫧 คัดลอกแล้วจ้า! 🫧
+    </div>
+
+    <main class="max-w-6xl w-full relative z-10 flex flex-col md:flex-row gap-6 items-start">
+        
+        <div class="w-full md:w-[300px] flex flex-col gap-6">
+            <div class="aero-card p-6">
+                <h2 class="text-xl font-extrabold mb-2">📢 อย่าลืมโน๊ต!</h2>
+                <p class="text-sm font-bold opacity-80 leading-relaxed">
+                    หากลืมโน๊ตสลิป โอนมาใหม่ <span class="text-blue-600 underline">0.1</span> พร้อมโน๊ตด้วยนะคะ 🐠
+                </p>
+            </div>
+
+            <div class="aero-card p-2 aspect-[3/4] overflow-hidden group">
+                <div class="w-full h-full bg-blue-100/30 rounded-[25px] flex items-center justify-center border-2 border-dashed border-white/50">
+                    <span class="text-4xl">📸</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full md:flex-1 aero-card p-8 flex flex-col items-center">
+            <div class="text-center mb-6">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-neon mb-2 tracking-tighter italic">
+                    Nonioaey Payment 🌊
+                </h1>
+                <p class="text-xs font-bold bg-white/40 px-4 py-1 rounded-full inline-block">2026 SEASON 2 • FRUTIGER AERO</p>
+            </div>
+
+            <div class="w-full max-w-lg aspect-video glass-inner p-2 mb-8">
+                <div class="w-full h-full bg-gradient-to-br from-blue-400 to-green-300 rounded-[18px] flex items-center justify-center">
+                     <span class="text-6xl emoji-float">🐚</span>
+                </div>
+            </div>
+
+            <div class="w-full max-w-md space-y-4">
+                <div class="text-center">
+                    <p class="text-xs font-black uppercase tracking-[0.2em] opacity-60">Account Holder</p>
+                    <p class="text-2xl font-extrabold text-blue-900">ศศิกานต์ น้ำเขียว 🔋</p>
+                </div>
+
+                <div class="glass-inner p-3 flex items-center justify-between border-l-8 border-l-green-400">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-black shadow-lg text-sm">K</div>
+                        <div>
+                            <p class="text-[10px] font-bold opacity-60 uppercase">Kasikorn</p>
+                            <p class="text-lg font-bold tracking-tighter text-blue-900">131-1-45867-8</p>
+                        </div>
+                    </div>
+                    <button onclick="copyText('1311458678', this)" class="btn-copy px-5 py-2 rounded-full text-xs">COPY</button>
+                </div>
+
+                <div class="glass-inner p-3 flex items-center justify-between border-l-8 border-l-orange-400">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-black shadow-lg text-sm">W</div>
+                        <div>
+                            <p class="text-[10px] font-bold opacity-60 uppercase">Wallet</p>
+                            <p class="text-lg font-bold tracking-tighter text-blue-900">082-634-8896</p>
+                        </div>
+                    </div>
+                    <button onclick="copyText('0826348896', this)" class="btn-copy px-5 py-2 rounded-full text-xs">COPY</button>
+                </div>
+
+                <a href="https://tmn.app.link/nEoPnxQ9R1b" target="_blank" class="block text-center text-xs font-bold text-blue-700 hover:scale-110 transition-transform">
+                    🔗 กดตรงนี้เพื่อโอนผ่านลิงก์ Wallet
+                </a>
+            </div>
+
+            <div class="mt-8 bg-white/60 px-8 py-3 rounded-full border-2 border-white shadow-inner">
+                <p class="text-sm font-black text-blue-800">✨ โอนเเล้วส่งสลิปได้เลยค้าบ 🫧</p>
+            </div>
+        </div>
+
+        <div class="w-full md:w-[300px] flex flex-col gap-6">
+            <div class="aero-card p-2 aspect-[3/4] overflow-hidden">
+                <div class="w-full h-full bg-green-100/30 rounded-[25px] flex items-center justify-center border-2 border-dashed border-white/50">
+                    <span class="text-4xl">🐬</span>
+                </div>
+            </div>
+
+            <div class="aero-card p-6">
+                <h3 class="text-center font-extrabold text-blue-900 mb-4">📱 Contact Me</h3>
+                <div class="grid grid-cols-1 gap-2">
+                    <a href="https://www.facebook.com/profile.php?id=61554192600355" class="glass-inner p-3 text-center font-bold text-xs hover:bg-blue-400 hover:text-white transition-all">FACEBOOK 🛰️</a>
+                    <a href="https://line.me/ti/p/LfBtdhlrVa" class="glass-inner p-3 text-center font-bold text-xs hover:bg-green-400 hover:text-white transition-all">LINE 💬</a>
+                </div>
+            </div>
+
+            <div class="aero-card p-2 aspect-square overflow-hidden">
+                <div class="w-full h-full bg-blue-100/30 rounded-[25px] flex items-center justify-center border-2 border-dashed border-white/50">
+                    <span class="text-4xl">🐳</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="mt-10 text-white font-bold text-[10px] opacity-60">
+        © 2026 NONIOAEY • FRUTIGER AERO DESIGN • 🫧🌊🐬
+    </footer>
+
+    <script>
+        // สร้างฟองอากาศสุ่ม
+        const bubbleContainer = document.getElementById('bubbles-container');
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            const size = Math.random() * 40 + 10 + 'px';
+            bubble.style.width = size;
+            bubble.style.height = size;
+            bubble.style.left = Math.random() * 100 + 'vw';
+            bubble.style.animationDuration = Math.random() * 5 + 5 + 's';
+            bubbleContainer.appendChild(bubble);
+            setTimeout(() => bubble.remove(), 10000);
+        }
+        setInterval(createBubble, 1000);
+
+        // ฟังก์ชันคัดลอกพร้อมเอฟเฟกต์ควันระเบิด
+        function copyText(text, btn) {
+            navigator.clipboard.writeText(text);
+            
+            // สร้าง Particle ควัน
+            for(let i=0; i<10; i++) {
+                const p = document.createElement('div');
+                p.classList.add('smoke-particle');
+                const size = Math.random() * 20 + 10 + 'px';
+                p.style.width = size;
+                p.style.height = size;
+                p.style.left = '50%';
+                p.style.top = '50%';
+                p.style.setProperty('--tx', (Math.random() - 0.5) * 100 + 'px');
+                p.style.setProperty('--ty', (Math.random() - 0.5) * 100 + 'px');
+                btn.appendChild(p);
+                setTimeout(() => p.remove(), 600);
+            }
+
+            // Toast
+            const toast = document.getElementById('toast');
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(0)';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
